@@ -1,0 +1,12 @@
+{% extends "base_contact.html" %}
+
+{% block  title %}Message sent{{ block.super }}{% endblock %}
+
+{% block page_type %}contact_form{% endblock %}
+
+{% block main_content %}
+	<h2>Message sent</h2>
+		<p id="form_instructions">Your message has been sent! Please allow at least a day or so before expecting a reply.</p>
+{% endblock %}
+
+{% block google_analytics %}{% endblock %}

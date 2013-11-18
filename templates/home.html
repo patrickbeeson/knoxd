@@ -1,0 +1,123 @@
+{% extends "base_generic.html" %}
+
+{% load feed_categories generic_content markup cache %}
+
+{% block title %}{{ block.super }} | The latest headlines from the best of Knoxville. Get Knox'd.{% endblock %}
+
+{% block page_type %}home{% endblock %}
+{% block main_content %}
+	<ul id="latest_content">
+	{% cache 500 home_latestheadlines %}
+	{% get_feed_categories as category_list %}
+	{% for category in category_list %}
+	{% ifequal category.slug "classified" %}
+	{% else %}
+	{% ifequal category.slug "real-estate" %}
+	{% else %}
+	{% ifequal category.slug "employment" %}
+	{% else %}
+		<li class="category_block"{# if forloop.counter|divisibleby:"4" %}{% endif #}>
+			<dl class="category_group">
+				<dt><a href="{{ category.get_absolute_url }}" title="{{ category.description }}">{{ category.title }}</a></dt>
+				<dd class="category_description">{{ category.description }}</dd>
+				<dd class="category_headlines">
+				{% if category.get_feed_items %}
+					<h3>Latest headlines</h3>
+					<ul class="feed_headlines">
+					{% for feeditem in category.get_feed_items|slice:"5" %}
+						<li><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a> <span class="feed_for_headline"><a href="{{ feeditem.feed.get_absolute_url }}" title="{{ feeditem.feed.title }}">{{ feeditem.feed }}</a></span></li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					<h3>Waiting for headlines</h3>
+					<p>This category is currently awaiting new headlines. Please check back soon!</p>
+				{% endif %}
+				</dd>
+			</dl>
+		</li>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+	{% if forloop.counter|divisibleby:"3" %}<li class="ie_clear"><!--Hack to clear for IE7--></li>{% endif %}
+	{% endfor %}
+	{% endcache %}		
+	</ul>
+{% endblock %}
+
+{% block home_classified %}
+<div id="classified_content">
+	<ul id="latest_content_classified">
+	{% cache 500 home_latestclassifiedheadlines %}
+	{% get_feed_categories as category_list %}
+	{% for category in category_list %}
+	{% ifequal category.slug "classified" %}
+		<li class="category_block">
+			<dl class="category_group">
+				<dt><a href="{{ category.get_absolute_url }}" title="{{ category.description }}">{{ category.title }}</a></dt>
+				<dd class="category_description">{{ category.description }}</dd>
+				<dd class="category_headlines">
+				{% if category.get_feed_items %}
+					<h3>Latest headlines</h3>
+					<ul class="feed_headlines">
+					{% for feeditem in category.get_feed_items|slice:"5" %}
+						<li><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a> <span class="feed_for_headline"><a href="{{ feeditem.feed.get_absolute_url }}" title="{{ feeditem.feed.title }}">{{ feeditem.feed }}</a></span></li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					<h3>Waiting for headlines</h3>
+					<p>This category is currently awaiting new headlines. Please check back soon!</p>
+				{% endif %}
+				</dd>
+			</dl>
+		</li>
+	{% else %}
+	{% ifequal category.slug "real-estate" %}
+		<li class="category_block">
+			<dl class="category_group">
+				<dt><a href="{{ category.get_absolute_url }}" title="{{ category.description }}">{{ category.title }}</a></dt>
+				<dd class="category_description">{{ category.description }}</dd>
+				<dd class="category_headlines">
+				{% if category.get_feed_items %}
+					<h3>Latest headlines</h3>
+					<ul class="feed_headlines">
+					{% for feeditem in category.get_feed_items|slice:"5" %}
+						<li><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a> <span class="feed_for_headline"><a href="{{ feeditem.feed.get_absolute_url }}" title="{{ feeditem.feed.title }}">{{ feeditem.feed }}</a></span></li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					<h3>Waiting for headlines</h3>
+					<p>This category is currently awaiting new headlines. Please check back soon!</p>
+				{% endif %}
+				</dd>
+			</dl>
+		</li>
+	{% else %}
+	{% ifequal category.slug "employment" %}
+		<li class="category_block">
+			<dl class="category_group">
+				<dt><a href="{{ category.get_absolute_url }}" title="{{ category.description }}">{{ category.title }}</a></dt>
+				<dd class="category_description">{{ category.description }}</dd>
+				<dd class="category_headlines">
+				{% if category.get_feed_items %}
+					<h3>Latest headlines</h3>
+					<ul class="feed_headlines">
+					{% for feeditem in category.get_feed_items|slice:"5" %}
+						<li><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a> <span class="feed_for_headline"><a href="{{ feeditem.feed.get_absolute_url }}" title="{{ feeditem.feed.title }}">{{ feeditem.feed }}</a></span></li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					<h3>Waiting for headlines</h3>
+					<p>This category is currently awaiting new headlines. Please check back soon!</p>
+				{% endif %}
+				</dd>
+			</dl>
+		</li>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+	{% endfor %}
+	{% endcache %}		
+	</ul>
+</div>
+{% endblock %}
+

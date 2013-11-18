@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{% block title %}knoxd.com{% endblock %}</title>
+		<link href="http://media.knoxd.com/images/favicon.ico" rel="icon" type="image/x-icon" />
+		<meta name="description" content="{% block meta_description %}The latest headlines from the best of Knoxville. Get Knox'd.{% endblock %}" />
+		<meta name="keywords" content="{% block meta_keywords %}Knoxd, Knox'd, Knoxville, Tennessee, blogs, news, information, politics, business, RSS, feeds, classified{% endblock %}" />
+		
+		{% block google_verify %}
+		<meta name="verify-v1" content="H505s4GCH16KqwHhcqzePoOl+wKr5hfNrOb6E548PJI=" />
+		{% endblock %}
+		
+		{% block css %}
+		<link rel="stylesheet" href="http://media.knoxd.com/css/styles.css" type="text/css" media="screen" />
+		<!--[if IE]>
+			<link rel="stylesheet" href="http://media.knoxd.com/css/ie.css" type="text/css" media="screen" />
+		<![endif]-->
+		{% endblock %}
+		
+		{% block meta_robots %}{% endblock %}
+		
+		{% block javascript %}
+		{% endblock %}
+		
+		{% block rss %}
+		<link rel="alternate" type="application/rss+xml" title="RSS" href="http://knoxd.com/feeds/river/" />
+		{% endblock %}
+
+	</head>
+<body id="{% block page_type %}{% endblock %}"{% block extra_class%}{% endblock %}>
+	<ul id="accessibility">
+		<li><a href="#main_content">Skip to content</a></li>
+		<li><a href="#navigation">Skip to navigation</a></li>
+	</ul>
+
+	<div id="wrap"><!--Begin wrap-->
+		<div id="branding"><!--Begin branding-->
+			<h1 id="logo"><a href="/" title="knoxd">Knoxd</a></h1>
+			<p id="branding_description">The latest headlines from the best of Knoxville.</p>
+		</div><!--End branding-->
+		
+		<div id="navigation"><!--Begin navigation-->
+		{% block navigation %}
+			<ul>
+				<li id="nav_home"><a href="/" title="Back to the home page">Home</a> / </li>
+				<li id="nav_river"><a href="/river/" title="Latest headlines in river format">River</a> / </li>
+				<li id="nav_blog"><a href="/blog/" title="Latest new feature and change information for knoxd">Blog</a> / </li>
+				<li id="nav_about"><a href="/about/" title="About Knoxd.com">About</a> / </li>
+				<li id="nav_contact"><a href="/contact/" title="Send us a message about this site">Contact</a> / </li>
+				<li id="nav_rss"><a href="/feeds/river/" title="RSS feed for Knox'd"><abbr title="Really simple syndication">RSS</abbr></a></li>
+			</ul>
+		{% endblock %}
+		</div><!--End navigation-->
+	
+		<div id="content"><!--Begin content-->
+			<div id="main_content"><!--Begin main content-->
+			{% block main_content %}
+			{% endblock %}
+			</div><!--End main content-->
+		</div><!--End content-->
+		
+	</div><!--End wrap-->
+	{% block home_classified %}{% endblock %}
+	<div id="site_info"><!--Begin site_info-->
+		<h2>Colophon and copyright</h2>
+		<p>Copyright &copy; {% now "Y" %} <a href="http://patrickbeeson.com" title="The Web site of Patrick Beeson">Patrick Beeson</a> and <a href="http://caseypeters.com">Casey Peters</a>. All rights reserved.</p>
+		<p>This site is published using <a href="http://www.djangoproject.com/" title="Django">Django</a>, and hosted by <a href="http://www.webfaction.com/?affiliate=pbeeson" title="Use this link for referral to WebFaction">WebFaction</a>.</p>
+		
+		{% block footer_ad %}
+		<div id="site_info_ad">
+			<script type="text/javascript">
+			<!--
+			ctxt_ad_partner = "1746095767";
+			ctxt_ad_section = "68511";
+			ctxt_ad_bg = "";
+			ctxt_ad_width = 468;
+			ctxt_ad_height = 60;
+			ctxt_ad_bc = "ffffff";
+			ctxt_ad_cc = "EBEFF2";
+			ctxt_ad_lc = "AC3434";
+			ctxt_ad_tc = "000000";
+			ctxt_ad_uc = "000000";
+			// -->
+			</script>
+			<script type="text/javascript" src="http://ypn-js.overture.com/partner/js/ypn.js"></script>
+		</div>
+		{% endblock %}
+	</div><!--End site_info-->
+	{% block google_analytics %}
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-207270-7");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+	{% endblock %}
+</body>
+</html>

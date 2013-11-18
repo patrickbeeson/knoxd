@@ -1,0 +1,32 @@
+{% extends "base_blog.html" %}
+
+{% load markup cache %}
+
+{% block title %}Blog entries for {{ object.title }}{{ block.super }}{% endblock %}
+
+{% block meta_description %}{{ object.description_html|striptags }}{% endblock %}
+
+{% block page_type %}entry_archive{% endblock %}
+
+{% block main_content %}
+
+<h2>Blog entries for "{{ object.title }}"</h2>
+
+<ul id="latest_entries">
+{% cache 500 blog_categoryarchive %}
+{% for entry in object.entry_set.all %}
+	<li>
+    	<h3><a href="{{ entry.get_absolute_url }}" title="{{ entry.headline }}">{{ entry.headline }}</a></h3>
+    	<ul class="entry_meta">
+			<li><strong>Published:</strong> {{ entry.pub_date|date:"F j, Y" }}</li>
+			<li><strong>Author:</strong> {{ entry.author.first_name }} {{ entry.author.last_name }}</li>
+		</ul>
+    	<div class="entry_summary">
+    		{{ entry.summary_html|safe }}
+    	</div>
+    </li>
+{% endfor %}
+{% endcache %}
+</ul>
+
+{% endblock %}

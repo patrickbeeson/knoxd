@@ -1,0 +1,35 @@
+{% extends "base_blog.html" %}
+
+{% load markup comments humanize cache %}
+
+{% block title %}Knox'd blog{{ block.super }}{% endblock %}
+
+{% block page_type %}entry_archive{% endblock %}
+
+{% block main_content %}
+
+<h2>Latest blog entries</h2>
+
+<ul id="latest_entries">
+{% cache 500 blog_entryarchive %}
+{% for object in latest|slice:"5" %}
+{% ifequal object.status 3 %}
+	<li>
+    	<h3><a href="{{ object.get_absolute_url }}" title="{{ object.headline }}">{{ object.headline }}</a></h3>
+    	<ul class="entry_meta">
+			<li><strong>Published:</strong> {{ object.pub_date|date:"F j, Y" }}</li>
+			<li><strong>Author:</strong> {{ object.author.first_name }} {{ object.author.last_name }}</li>
+			<li><strong>Category:</strong> <a href="{{ object.category.get_absolute_url }}" title="{{ object.category.description }}">{{object.category.title }}</a></li>
+			<li><strong>Comments:</strong> {% if object.enable_comments %}{% get_comment_count for blog.entry object.id as comment_count %}<a href="{{ object.get_absolute_url }}#comments" title="Number of comments for this entry">{% if comment_count %}{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}{% else %}No comments{% endif %}</a>{% else %}Closed{% endif %}</li>
+		</ul>
+    	<div class="entry_summary">
+    		{{ object.summary_html|safe }}
+    		<p class="more"><a href="{{ object.get_absolute_url }}#entry_body" title="{{ object.headline }}">Continue reading</a></p>
+    	</div>
+    </li>
+{% endifequal %}
+{% endfor %}
+{% endcache %}
+</ul>
+
+{% endblock %}

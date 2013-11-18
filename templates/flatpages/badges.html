@@ -1,0 +1,21 @@
+{% extends "base_flatpage.html" %}
+
+{% block title %}{{ flatpage.title }}{{ block.super }}{% endblock %}
+
+{% block page_type %}badges{% endblock %}
+
+{% block extra_class%} class="about"{% endblock %}
+
+{% block main_content %}
+	<h2>{{ flatpage.title }}</h2>
+	<div id="flatpage_content">
+		{{ flatpage.content }}
+	</div>
+{% endblock %}
+
+{% block navigation %}
+{{ block.super }}
+<ul id="about_subnav">
+	<li id="about_badges"><a href="http://knoxd.com/about/badges/" title="Knox'd badges">Badges</a></li>
+</ul>
+{% endblock %}

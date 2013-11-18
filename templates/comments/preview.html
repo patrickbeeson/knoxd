@@ -1,0 +1,67 @@
+{% extends "base_comment.html" %}
+
+{% block page_type %}comment_preview{% endblock %}
+
+{% block title %}Preview your comment{{ block.super }}{% endblock %}
+
+{% load comments markup %}
+
+{% block main_content %}
+{% if form.errors %}
+<h2>Comment error</h2>
+	<p>Your comment submission had errors. Please return to the previous page and correct them before posting a comment.</p>
+{% else %}
+<h2>Preview your comment</h2>
+<div id="comments">
+    <ul id="comments_content">
+    	<li class="{% ifequal comment.person_name 'Patrick Beeson' %}author_comment{% else %}comment{% endifequal %}" id="comment-{{ comment.id }}">
+			<div class="comment_body">
+				{{ comment|markdown:"safe"|urlizetrunc:"40" }}
+			</div>
+			<ul class="comment_meta">
+				<li class="byline">{{ comment.user_name|escape }}</li>
+				<li class="date">{{ comment.submit_date|date:"N W, Y" }}</li>
+				<li class="time">{{ comment.submit_date|date:"f a" }}</li>
+				<li class="permalink"><a href="#comment-{{ comment.id }}" title="Permalink to this comment">Permalink</a></li>
+			</ul>
+		</li>
+    </ul>
+	<div id="comments_open">
+    	<h3>Revise your comment</h3>
+    	<p id="comment_policy">Please use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax for formatting. No <abbr title="hypertext markup language">HTML</abbr> is allowed.<!-- By using this comment form, it's assumed that you agree with the terms of <a href="http://patrickbeeson.com/about/comments/" title="Comment policy for this Web site">my comment policy</a>.--></p>
+		<form action="{% comment_form_target %}" method="POST">
+		{% for field in form %}
+			{% if field.is_hidden %}
+				{{ field }}
+			{% else %}
+        	<p
+			{% if field.errors %} class="error"{% endif %}
+			{% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
+			{% if field.errors %}{{ field.errors }}{% endif %}
+			{{ field.label_tag }} {{ field }}
+			</p>
+			{% endif %}
+		{% endfor %}
+    	{% comment %}
+    	<form action="../postfree/" method="post">
+    		<p><label for="id_person_name">Your name:</label>
+    		<input type="text" id="id_person_name" name="person_name" value="{{ comment.person_name|escape }}" /></p>
+			<p><label for="id_comment">Comment:</label><br /><textarea name="comment" id="id_comment" rows="10" cols="60">{{ comment.comment }}</textarea></p>
+			<input type="hidden" name="options" value="{{ options }}" />
+			<input type="hidden" name="target" value="{{ target }}" />
+			<input type="hidden" name="gonzo" value="{{ hash }}" />
+			<div id="preview_form_submit">
+				<p id="preview_comment"><input type="submit" name="preview" value="Preview comment" /></p>
+				<p id="submit_comment"><input type="submit" name="post" value="Post comment" /></p>
+			</div>
+		</form>
+		{% endcomment %}
+		<p class="submit">
+			<input type="submit" name="submit" class="submit-post" value="Post">
+			<input type="submit" name="submit" class="submit-preview" value="Preview">
+		</p>
+		</form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

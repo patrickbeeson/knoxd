@@ -1,0 +1,35 @@
+{% extends "base_aggregator.html" %}
+
+{% load markup cache feed_categories %}
+
+{% block title %}Knox'd categories{{ block.super }}{% endblock %}
+
+{% block page_type %}category_list{% endblock %}
+
+{% block meta_description %}A list of all categories for Knox'd.{% endblock %}
+
+{% block meta_keywords %}{% cache 500 category_list_meta %}{% get_feed_categories as category_list %}{% for category in category_list %}{{ category.title }}, {% for feed in category.get_feeds %}{{ feed.title }}, {% endfor %}{% endfor %}{% endcache %}{% endblock %}
+
+{% block main_content %}
+	<h2>All categories for Knox'd</h2>
+	
+	{% cache 500 category_list %}
+	{% get_feed_categories as category_list %}
+	<ul id="categories">
+		{% for category in category_list %}
+		<li>
+			<h3><a href="{{ category.get_absolute_url }}" title="{{ category.description }}">{{ category.title }}</a></h3>
+			<ul class="category_feeds">
+			{% for feed in category.get_feeds %}
+				<li>
+					<h4><a href="{{ feed.public_url }}" title="{{ feed.description }}">{{ feed.title }}</a> <span class="headline_count">({{ feed.feeditem_set.count }} headlines)</span></h4>
+				</li>
+			{% endfor %}
+			</ul>
+		</li>
+		{% endfor %}
+	</ul>
+	{% endcache %}
+{% endblock %}
+
+

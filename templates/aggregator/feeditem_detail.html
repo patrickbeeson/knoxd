@@ -1,0 +1,40 @@
+{% extends "base_aggregator.html" %}
+
+{% load markup cache %}
+
+{% block title %}{{ feeditem.feed.title }}: {{ feeditem.title|markdown|striptags }} {{ block.super }}{% endblock %}
+
+{% block page_type %}feed_item_detail{% endblock %}
+
+{% block meta_description %}{% if feeditem.summary %}{{ feeditem.summary|striptags|truncatewords:"50" }}{% else %}{{ feeditem.title }}{% endif %}{% endblock %}
+
+{% block meta_keywords %}{{ feeditem.feed.keywords }}{% endblock %}
+
+{% block meta_robots %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block main_content %}
+	<h2><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a></h2>
+	<div id="expanded_summary">
+		{% if feeditem.summary %}
+		{{ feeditem.summary|striptags|markdown|urlize|truncatewords:"250" }}
+		{% else %}
+		{{ feeditem.title|markdown }}
+		{% endif %}
+		<p id="read_more"><a href="{{ feeditem.link }}">Read entry in context</a></p>
+	</div>
+	
+	<ul id="headline_meta">
+		<li id="date"><strong>Posted:</strong> {{ feeditem.date_modified|date:"N j, Y" }} at {{ feeditem.date_modified|date:"f a" }}</li>
+		<li id="feed"><strong>Feed:</strong> <a href="{{ feeditem.feed.public_url }}" title="{{ feeditem.feed.title }}">{{ feeditem.feed.title }}</a></li>
+		<li id="category"><strong>Category:</strong> <a href="/categories/{{ feeditem.feed.category.slug }}/" title="{{ feeditem.feed.category.description }}">{{ feeditem.feed.category.title }}</a></li>
+		<li id="more_headlines"><strong>Related:</strong>
+			<ul>
+			{% cache 500 aggregator_feeditemdetail_related feeditem %}
+				{% for feeditem in feeditem.feed.category.get_feed_items|slice:"3" %}
+				<li><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a> <span class="feed_for_headline"><a href="{{ feeditem.feed.public_url }}" title="{{ feeditem.feed.title }}">{{ feeditem.feed }}</a></span></li>
+				{% endfor %}
+			{% endcache %}
+			</ul>
+		</li>
+	</ul>
+{% endblock %}

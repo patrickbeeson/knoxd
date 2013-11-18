@@ -1,0 +1,20 @@
+{% extends "base_contact.html" %}
+
+{% block  title %}Contact{{ block.super }}{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="http://media.knoxd.com/js/addLoadEvent.js"></script>	
+<script type="text/javascript" src="http://media.knoxd.com/js/contactForm.js"></script>
+{% endblock %}
+
+{% block page_type %}contact_form{% endblock %}
+
+{% block main_content %}
+	<h2>Contact</h2>
+	<p id="form_instructions">You can use this form to send us a message. All fields are required.</p>
+	<form method="post" action="" id="contactform">
+		{{ form.as_p }}
+		<p id="submit_comment"><input type="submit" value="Send message" /></p>
+	</form>
+{% endblock %}
+

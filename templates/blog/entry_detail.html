@@ -1,0 +1,72 @@
+{% extends "base_blog.html" %}
+
+{% load markup comments humanize cache %}
+
+{% block title %}{{ object.headline|escape }}{{ block.super }}{% endblock %}
+
+{% block meta_description %}{{ object.summary|markdown|striptags }}{% endblock %}
+
+{% block meta_keywords %}{{ object.keywords }}{% endblock %}
+
+{% block page_type %}entry_detail{% endblock %}
+
+{% block main_content %}
+
+<h2>{{ object.headline }}</h2>
+<ul id="entry_meta">
+	<li><strong>Published:</strong> {{ object.pub_date|date:"F j, Y" }}</li>
+	<li><strong>Author:</strong> {{ object.author.first_name }} {{ object.author.last_name }}</li>
+	<li><strong>Category:</strong> <a href="{{ object.category.get_absolute_url }}" title="{{ object.category.description }}">{{object.category.title }}</a></li>
+	<li><strong>Comments:</strong> {% if object.enable_comments %}{% get_comment_count for blog.entry object.id as comment_count %}<a href="#comments" title="Number of comments for this entry">{% if comment_count %}{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}{% else %}No comments{% endif %}</a>{% else %}Closed{% endif %}</li>
+</ul>
+<div id="entry_body">
+	{{ object.body_html|safe }}
+</div>
+
+{% get_comment_list for blog.entry object.id as comment_list %}
+<div id="comments">
+	{% if object.enable_comments %}
+    {% get_comment_count for blog.entry object.id as comment_count %}
+    <h3>{% if comment_list %}{{ comment_count|apnumber|capfirst }} comment{{ comment_count|pluralize }}{% else %}Post a comment{% endif %}</h3>
+    {% if comment_list %}
+    <ul id="comments_content">
+    {% for comment in comment_list %}
+    {# if comment.approved #}
+    	<li class="{% ifequal comment.user_name 'Patrick Beeson' %}author_comment{% else %}{% ifequal comment.user_name 'Casey Peters' %}author_comment{% else %}comment{% endifequal %}{% endifequal %}{% if forloop.first %} first{% endif %}" id="c{{ comment.id }}">
+			<div class="comment_body">
+				{{ comment.comment|markdown:"safe"|urlizetrunc:"40" }}
+			</div>
+			<ul class="comment_meta">
+				<li class="date"><strong>Publish date:</strong> {{ comment.submit_date|date:"N j, Y" }}</li>
+				<li class="time"><strong>Publish time:</strong> {{ comment.submit_date|date:"f a" }}</li>
+				<li class="byline"><strong>Author:</strong> <a href="{{ comment.user_url }}">{{ comment.user_name|escape }}</a></li>
+				<li class="permalink"><strong>Permalink:</strong> <a href="#comment-{{ comment.id }}" title="Permalink to this comment">Permalink</a></li>
+			</ul>
+		</li>
+	{% comment %}
+	{% else %}
+    	<li class="comment pending{% if forloop.first %} first{% endif %}" id="c{{ comment.id }}">
+			<div class="comment_body">
+				<p><em>This comment is currently awaiting moderation. It will appear once it has been approved by Patrick or Casey.</em></p>
+			</div>
+			<ul class="comment_meta">
+				<li class="date"><strong>Publish date:</strong> {{ comment.submit_date|date:"N j, Y" }}</li>
+				<li class="time"><strong>Publish time:</strong> {{ comment.submit_date|date:"f a" }}</li>
+				<li class="byline"><strong>Author:</strong> {{ comment.person_name|escape }}</li>
+				<li class="permalink"><strong>Permalink:</strong> <a href="#comment-{{ comment.id }}" title="Permalink to this comment">Permalink</a></li>
+			</ul>
+		</li>
+	{% endif %}
+	{% endcomment %}
+	{% endfor %}
+    </ul>
+    {% endif %}
+	<div id="comments_open">
+    	{% if comment_list %}<h3>Post a comment</h3>{% endif %}
+    	<p id="comment_policy">Please use <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax for formatting. No <abbr title="hypertext markup language">HTML</abbr> is allowed.<!-- By using this comment form, it's assumed that you agree with the terms of <a href="http://patrickbeeson.com/about/comments/" title="Comment policy for this Web site">my comment policy</a>.--></p>
+    	{% render_comment_form for object %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

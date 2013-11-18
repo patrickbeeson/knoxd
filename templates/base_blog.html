@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block title %} | knoxd.com{% endblock %}
+
+{% block meta_description %}The latest information about new features and changes for Knox'd{% endblock %}
+
+{% block meta_keywords %}Knoxd, Knox'd, Knoxville, Tennessee, blogs, news, information, politics, business, RSS, feeds, classified, blog, new features, updates, changes, bugs{% endblock %}
+
+{% block extra_class%} class="blog"{% endblock %}
+
+{% block rss %}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://knoxd.com/feeds/blog/" />
+{% endblock %}
+
+{% block navigation %}
+{{ block.super }}
+<ul id="blog_subnav">
+	<li id="blog_archives"><a href="http://knoxd.com/blog/archives/" title="Knox'd blog archives">Archives</a> / </li>
+	<li id="blog_rss"><a href="http://knoxd.com/feeds/blog/" title="Knox'd blog RSS">RSS</a></li>
+</ul>
+{% endblock %}

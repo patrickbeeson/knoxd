@@ -1,0 +1,31 @@
+{% extends "base_aggregator.html" %}
+
+{% load markup cache %}
+
+{% block title %}Headlines for {{ feed.title }}: {{ feed.description }}{{ block.super }}{% endblock %}
+
+{% block page_type %}feed_detail{% endblock %}
+
+{% block meta_description %}{{ feed.description }}{% endblock %}
+
+{% block meta_keywords %}{{ feed.keywords }}{% endblock %}
+
+{% block main_content %}
+	<h2>Latest headlines for <a href="{{ feed.public_url }}" title="{{ feed.title }}">{{ feed.title }}</a></h2>
+	
+	<ul id="feeditems">
+	{% cache 500 feed_detail feed.id %}
+	{% for feeditem in feed.feeditem_set.all|slice:"20" %}
+		<li>
+			<h3>Added {{ feeditem.date_modified|timesince }} ago</h3>
+			<ul class="feed_feeditems">
+				<li><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a></li>
+			</ul>
+		</li>
+	{% endfor %}
+	{% endcache %}
+	</ul>
+	<p class="pagination"><a href="{{ feed.public_url }}" title="{{ feed.title }}">More headlines from {{ feed.title }}</a></p>
+	
+{% endblock %}
+

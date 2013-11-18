@@ -1,0 +1,33 @@
+{% extends "base_blog.html" %}
+
+{% load markup comments humanize cache %}
+
+{% block title %}Knox'd blog archives{{ block.super }}{% endblock %}
+
+{% block page_type %}entry_archive{% endblock %}
+
+{% block main_content %}
+
+<h2>Blog archives</h2>
+
+{% cache 500 blog_entrylist %}
+{% regroup object_list by pub_date|date:"Y" as year_list %}
+{% regroup object_list by pub_date|date:"N j" as day_list %}
+<ul id="entries_for_year">
+	{% for day in year_list %}
+	<li>
+		<h3>{{ day.grouper }}</h3>
+		<ul class="entry_list">
+		{% for object in day.list %}
+			<li>
+				<h4>{{ object.pub_date|date:"N j" }}</h4>
+				<h5><a href="{{ object.get_absolute_url }}" title="{{ object.headline }}">{{ object.headline }}</a> <span class="category_for_entry"><a href="{{ object.category.get_absolute_url }}" title="{{ object.category.description }}">{{object.category.title }}</a></span></h5>
+			</li>
+		{% endfor %}
+		</ul>
+	</li>
+	{% endfor %}
+</ul>
+{% endcache %}
+
+{% endblock %}

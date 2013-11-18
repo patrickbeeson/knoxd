@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% load markup cache comparison %}
+
+{% block title %}Knox'd river of Knoxville news and information | {{ block.super }}{% endblock %}
+
+{% block page_type %}river{% endblock %}
+
+
+{% block main_content %}
+	<h2>Knox'd river</h2>
+	{% cache 500 aggregator_river next previous %}
+	{% regroup object_list by date_modified|timesince as time_list %}
+	{% for item in time_list %}
+	<h3>Added {{ item.grouper }} ago</h3>
+	<ul class="river_content">
+	{% for item in item.list %}
+		<li class="river_item">
+			<h4><a href="{{ item.link }}" title="{{ item.title|markdown|striptags }}">{{ item.title|markdown|striptags }}</a> <span class="site"><a href="{{ item.feed.public_url }}" title="{{ item.feed.title }}">{{ item.feed.title }}</a></span></h4>
+			<p class="summary">{% if item.summary %}{{ item.summary|markdown|striptags|truncatewords:"50" }}{% else %}{{ item.title|markdown|striptags }}{% endif %}</p>
+		</li>
+	{% endfor %}
+	</ul>
+	{% endfor %}
+	{% endcache %}
+	
+	<p class="pagination">{% if has_next %}<a href="?page={{ next }}">&laquo; Older headlines</a>{% endif %}{% if has_previous %} | <a href="?page={{ previous }}">Newer headlines &raquo;</a>{% endif %}</p>
+{% endblock %}

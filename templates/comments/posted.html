@@ -1,0 +1,12 @@
+{% extends "base_comment.html" %}
+
+{% block page_type %}comment_posted{% endblock %}
+
+{% block title %}Your comment has been posted{{ block.super }}{% endblock %}
+
+{% load comments markup %}
+
+{% block main_content %}
+<h2>Your comment has been posted</h2>
+	<p>Please allow a few minutes before the comment is published.</p>
+{% endblock %}

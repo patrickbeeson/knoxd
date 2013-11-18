@@ -1,0 +1,43 @@
+{% extends "base_aggregator.html" %}
+
+{% load markup cache %}
+
+{% block title %}{{ category.title }}: {{ category.description }}{{ block.super }}{% endblock %}
+
+{% block page_type %}category_detail{% endblock %}
+
+{% block meta_description %}{{ category.description }}{% endblock %}
+
+{% block meta_keywords %}{{ category.keywords }}{% endblock %}
+
+{% block main_content %}
+	<h2>{{ category.title }}</h2>
+	
+	<ul id="latest_content">
+	{% cache 500 aggregator_categorydetail category %}
+	{% for feed in category.get_feeds %}
+		<li class="feed_block">
+			<h3><a href="{{ feed.get_absolute_url }}" title="{{ feed.title }}">{{ feed.title|markdown|striptags }}</a> <a href="{{ feed.feed_url }}"><img src="http://media.knoxd.com/images/feed_icon_red.gif" width="16" height="16" alt="RSS feed for this blog" /></a></h3>
+			<ul class="feed_headlines">
+			{% if feed.get_feeditems %}
+			{% for feeditem in feed.get_feeditems|slice:"5" %}
+				<li class="feed_item">
+					<h4 class="title"><a href="{{ feeditem.link }}" title="{{ feeditem.title|markdown|striptags }}">{{ feeditem.title|markdown|striptags }}</a> <span class="read_more"><a href="/headline/{{ feeditem.id }}/">#</a></span></h4>
+					<p class="summary">{{ feeditem.summary|markdown|striptags|truncatewords:"50" }}</p>
+					<p class="date">Posted: {{ feeditem.date_modified|date:"N j, Y" }} at {{ feeditem.date_modified|date:"f a" }}</p>				
+				</li>
+			{% endfor %}
+			{% else %}
+				<li>
+					<h4>Waiting for headlines</h4>
+					<p>This feed is currently awaiting new headlines. Please check back soon!</p>				
+				</li>
+			{% endif %}
+			</ul>
+		</li>
+	{% if forloop.counter|divisibleby:"3" %}<li class="ie_clear"><!--Hack to clear for IE7--></li>{% endif %}
+	{% endfor %}
+	{% endcache %}
+	</ul>
+{% endblock %}
+
